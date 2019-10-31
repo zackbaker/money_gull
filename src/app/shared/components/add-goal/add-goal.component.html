@@ -1,0 +1,9 @@
+<div>
+    <h2> Add Goal </h2>
+    <error [errors]="errors"></error>
+    <input placeholder="Goal Name" [(ngModel)]="goal_name" />
+    <input placeholder="Goal Amount Needed" [(ngModel)]="amount_needed" />
+    <input placeholder="Goal Amount Saved" [(ngModel)]="amount_saved" />
+    <button (click)="saveGoal()"> Save </button>
+    <button (click)="hide()"> Back </button>
+</div>

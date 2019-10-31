@@ -1,0 +1,8 @@
+<div>
+    <h2> Sign Up </h2>
+    <error [errors]="errors"></error>
+    <input placeholder="Username" [(ngModel)]="username" type="text" />
+    <input placeholder="Email" [(ngModel)]="email" type="email" />
+    <input placeholder="Password" [(ngModel)]="password" type="password" />
+    <button (click)="submitForm()"> Submit </button>
+</div>

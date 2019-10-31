@@ -1,0 +1,9 @@
+<div>
+    <h3> Transactions </h3>
+     <div *ngFor="let transaction of transactions" (click)="goToTransaction(transaction.id)">
+         <span> {{ transaction.date | date:'medium' }} </span>
+         <span> {{ transaction.amount }} </span>
+         <span> {{ transaction.description }} </span>
+         <span> {{ transaction.transactionType }} </span>
+    </div>
+</div>

@@ -1,0 +1,14 @@
+default:
+  suites:
+    users:
+      paths: ["%paths.base%/features/users.feature"]
+      contexts: [UsersContext]
+    accounts:
+      paths: ["%paths.base%/features/accounts.feature"]
+      contexts: [AccountsContext]
+    goals:
+      paths: ["%paths.base%/features/goals.feature"]
+      contexts: [GoalsContext]
+    transactions:
+      paths: ["%paths.base%/features/transactions.feature"]
+      contexts: [TransactionsContext]

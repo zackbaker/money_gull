@@ -1,0 +1,15 @@
+<div>
+    <div class="message"> {{ message }} </div>
+    <button
+        (click)="showAddAccount()"
+        [ngClass]="{'hidden': !account_visible}"
+    > Add Account </button>
+    <add-account
+        (hideAddAccount)="hideAddAccount()"
+        (returnAccount)="addAccount($event)"
+        [ngClass]="{'hidden': !add_account_visible}"
+    ></add-account>
+    <div [ngClass]="{'hidden': !account_visible}" *ngIf="accounts">
+        <account *ngFor="let account of accounts" [account]="account"></account>
+    </div>
+</div>

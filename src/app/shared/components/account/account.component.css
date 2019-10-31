@@ -1,0 +1,14 @@
+span {
+    display: inline-block;
+    padding: 5px;
+    width: 30%;
+}
+
+input {
+    padding: 5px;
+    width: 30%;
+}
+
+.hidden {
+    display: none;
+}

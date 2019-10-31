@@ -1,0 +1,13 @@
+<button (click)="goToGoal()" [ngClass]="{'hidden': show_edit}">
+    <button (click)="showEdit(); $event.stopPropagation();" [ngClass]="{'hidden': !editable}"> Edit </button>
+    <h2> {{ goal.name }} </h2>
+    {{ goal.saved }} / {{ goal.needed }}
+</button>
+
+<button [ngClass]="{'hidden': !show_edit}">
+    <error [errors]="errors"></error>
+    <input [(ngModel)]=update_goal.name /> <br />
+    <input [(ngModel)]=update_goal.saved /> / <input [(ngModel)]=update_goal.needed />
+    <button (click)="updateGoal()"> Update </button>
+    <button (click)="stopEdit()"> Back </button>
+</button>

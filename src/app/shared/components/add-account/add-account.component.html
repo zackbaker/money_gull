@@ -1,0 +1,8 @@
+<div>
+    <h2> Add Account </h2>
+    <error [errors]="errors"></error>
+    <input placeholder="Account Name" [(ngModel)]="account_name" />
+    <input placeholder="Account Amount" [(ngModel)]="account_amount" />
+    <button (click)="saveAccount()"> Save </button>
+    <button (click)="hide()"> Back </button>
+</div>

@@ -1,0 +1,8 @@
+<div>
+    <nav>
+        <button (click)="showSignUp()"> Sign Up </button>
+        <button (click)="showSignIn()"> Sign In </button>
+    </nav>
+    <signin-form [ngClass]="{'hidden': !signin_visible}"></signin-form>
+    <signup-form [ngClass]="{'hidden': !signup_visible}"></signup-form>
+</div>

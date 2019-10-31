@@ -1,0 +1,15 @@
+<div>
+    <div class="message"> {{ message }} </div>
+    <button
+        (click)="showAddGoal()"
+        [ngClass]="{'hidden': !goal_visible}"
+    > Add Goal </button>
+    <add-goal
+        (hideAddGoal)="hideAddGoal()"
+        (returnGoal)="addGoal($event)"
+        [ngClass]="{'hidden': goal_visible}"
+    ></add-goal>
+    <div [ngClass]="{'hidden': !goal_visible}" *ngIf="goals">
+        <goal *ngFor="let goal of goals" [goal]="goal" [editable]="true"></goal>
+    </div>
+</div>

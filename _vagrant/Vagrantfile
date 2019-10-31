@@ -1,0 +1,113 @@
+# The most common configuration options are documented and commented below.
+# For a complete reference, please see the online documentation at
+# https://docs.vagrantup.com.
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# Establish changable variables
+$MEM                = "1536"
+$IP                 = "192.168.2.19"
+$VAGRANT_VERSION    = 2
+
+$always = <<ALWAYS
+    # sudo apt-get update
+    # sudo apt-get upgrade -y
+    sudo wget "http://www.adminer.org/latest.php" -O /usr/share/adminer/latest.php
+    sudo wget "https://raw.githubusercontent.com/vrana/adminer/master/designs/pepa-linha/adminer.css" -O /usr/share/adminer/adminer.css
+ALWAYS
+
+$once = <<ONCE
+    sudo apt-get update
+    sudo apt-get upgrade -y
+    sudo apt-get install php5 -y
+    sudo apt-get install git -y
+
+    # Installing Composer
+    sudo php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+    php composer-setup.php --filename=composer
+    sudo mv composer /usr/local/bin/composer
+    cd /var/www/money_gull/api
+    composer install
+    ln -s ../../vendor/bin/behat tests/behat/
+    cd ~
+
+    # Install XDebug
+    sudo apt-get install php5-xdebug -y
+    sudo cp /var/www/money_gull/_vagrant/provision/xdebug.ini /etc/php5/mods-available/xdebug.ini
+
+    # MySQL install
+    sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password password money_gull'
+    sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password money_gull'
+    sudo apt-get install -y mysql-server
+    sudo apt-get install php5-mysql
+
+    # Creating Adminer
+    sudo mkdir /usr/share/adminer
+    sudo wget "http://www.adminer.org/latest.php" -O /usr/share/adminer/latest.php
+    sudo wget "https://raw.githubusercontent.com/vrana/adminer/master/designs/pepa-linha/adminer.css" -O /usr/share/adminer/adminer.css
+    sudo ln -s /usr/share/adminer/latest.php /usr/share/adminer/adminer.php
+    echo "Alias /adminer.php /usr/share/adminer/adminer.php" | sudo tee /etc/apache2/conf-available/adminer.conf
+
+    # Setup Database
+    sudo echo "create database money_gull" | mysql -u root -pmoney_gull
+    sudo mysql -u root -pmoney_gull money_gull < /var/www/money_gull/api/schema/money_gull.sql
+
+    # Populate Database
+    cd /var/www/money_gull/api/faker
+    php fakerKickoff.php
+    cd ~
+
+    # Installing JSPM
+    curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
+    sudo apt-get install nodejs -y
+    sudo apt-get install npm -y
+    sudo npm install -g npm3
+    npm3 install -g @angular/cli
+    cd /var/www/money_gull
+    npm install
+    cd ~
+
+
+    # Setting up virtual host
+    cp /var/www/money_gull/_vagrant/provision/money_gull.conf /etc/apache2/sites-enabled/money_gull.conf
+
+    # Adding virtual host to vagrant machine
+    echo "127.0.0.1 api.moneygull.local" | sudo tee -a /etc/hosts
+    
+    # Setup conf files for hosting
+    sudo a2enconf adminer.conf
+    sudo a2ensite money_gull.conf
+
+    # Setup mod for routes
+    sudo a2enmod rewrite
+
+    sudo service apache2 restart
+ONCE
+
+Vagrant.configure($VAGRANT_VERSION) do |config|
+
+    # Every Vagrant development environment requires a box. You can search for
+    # boxes at https://atlas.hashicorp.com/search.
+    config.vm.box = "ubuntu/trusty64"
+
+    # Create a private network, which allows host-only access to the machine
+    # using a specific IP.
+    config.vm.network "private_network", ip: $IP
+
+    # Share an additional folder to the guest VM. The first argument is
+    # the path on the host to the actual folder. The second argument is
+    # the path on the guest to mount the folder. And the optional third
+    # argument is a set of non-required options.
+    config.vm.synced_folder "../", "/var/www/money_gull", fsnotify: true
+
+    config.vm.provider "virtualbox" do |vb|
+        vb.name = "money_gull"
+        vb.memory = $MEM
+        
+        config.vm.provision "once", type: "shell", inline: $once
+        config.vm.provision "always", type: "shell", inline: $always, run: "always"
+        
+        # turn on for debugging when vagrant is failing
+        # vb.gui = true
+    end
+end

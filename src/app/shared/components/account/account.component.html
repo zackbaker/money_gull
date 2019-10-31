@@ -1,0 +1,13 @@
+<div (click)="goToAccount()" [ngClass]="{'hidden': update_view}">
+    <span> {{ account.name }} </span>
+    <span> ${{ account.amount }} </span>
+    <button (click)="switchToUpdate(); $event.stopPropagation();"> Update </button>
+</div>
+
+<div [ngClass]="{'hidden': !update_view}">
+    <error [errors]="errors"></error>
+    <input [(ngModel)]="account_name" />
+    <input [(ngModel)]="account_amount" />
+    <button (click)="updateAccount()"> Update </button>
+    <button (click)="stopUpdate()"> Cancel </button>
+</div>

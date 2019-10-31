@@ -1,0 +1,7 @@
+<div>
+    <account *ngIf="account_ready" [account]="account"></account>
+    <transactions
+        *ngIf="account_ready"
+        [transactions]="account.transactions">
+    </transactions>
+</div>
